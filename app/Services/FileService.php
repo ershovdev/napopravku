@@ -43,6 +43,15 @@ class FileService
         return response()->file(self::getRealPath($storage, $file));
     }
 
+    /**
+     * Translates word file into PHPWord object, so in future we could
+     * translate it into HTML
+     *
+     * @param Storage $storage
+     * @param File $file
+     * @return \PhpOffice\PhpWord\Writer\WriterInterface
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
     public static function getPrivateWordResponse(Storage $storage, File $file)
     {
         $path = self::getRealPath($storage, $file);

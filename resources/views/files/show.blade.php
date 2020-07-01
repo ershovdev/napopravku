@@ -65,12 +65,3 @@
         </div>
     </div>
 @endsection
-
-@section('scripts')
-    <script>
-        console.log(window.innerHeight);
-        window.onload = function () {
-            document.getElementById('viewer').style.height = window.innerHeight - 100 + 'px';
-        };
-    </script>
-@endsection
