@@ -1,11 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
     @include('breadcrumbs', ['breadcrumbs' => $breadcrumbs])
-
     <hr>
-
     <div class="actions mb-2">
         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createFileModal">
             Upload file
@@ -14,12 +11,10 @@
             Create folder
         </button>
     </div>
-
     <hr>
-
     <div class="file-explorer">
         @if(count($folders) === 0 && count($files) === 0)
-            Empty
+            <strong>Empty.</strong> Upload your first file!
         @endif
 
         @foreach($files as $file)
@@ -56,7 +51,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Создать файл</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Upload file</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -70,9 +65,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button onclick="document.getElementById('file-form').submit();" class="btn btn-primary">
-                        Загрузить
+                        Upload
                     </button>
                 </div>
             </div>
@@ -86,20 +81,20 @@
                 @csrf
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Создать папку</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Create folder</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Введите название папки">
+                        <input type="text" class="form-control" name="name" placeholder="Type folder name here">
                         <input type="hidden" name="parent" value="{{ isset($parent) ? $parent->id : '' }}">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="submit" class="btn btn-primary">Создать</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
         </div>
