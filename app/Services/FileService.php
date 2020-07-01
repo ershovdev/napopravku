@@ -60,7 +60,7 @@ class FileService
         }
 
         foreach ($neighbors as $n) {
-            if ($n->name === $newName) return false;
+            if ($n->name === $newName . '.' . $n->extension) return false;
         }
 
         $file->update([

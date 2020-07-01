@@ -30,6 +30,8 @@ storage/*.key
 .idea/*
 .editorconfig
 
+database.sqlite
+
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
 
