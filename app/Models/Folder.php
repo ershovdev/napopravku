@@ -32,4 +32,12 @@ class Folder extends Model
     {
         return $this->belongsTo(Folder::class, 'parent_id');
     }
+
+    public static function getRootFolders(Storage $storage)
+    {
+        return Folder::where([
+            ['parent_id', null],
+            ['storage_id', $storage->id],
+        ])->get();
+    }
 }

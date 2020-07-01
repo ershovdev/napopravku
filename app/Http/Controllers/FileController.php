@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteFileRequest;
+use App\Http\Requests\DownloadFileRequest;
 use App\Http\Requests\RenameFileRequest;
 use App\Http\Requests\ShowFileRequest;
 use App\Http\Requests\StoreFileRequest;
@@ -29,7 +30,7 @@ class FileController extends Controller
         return view('files.show', compact('file', 'path'));
     }
 
-    public function download(Request $request, File $file)
+    public function download(DownloadFileRequest $request, File $file)
     {
         $storage = $request->user()->storage;
         $path = $storage->name . '/' . $file->uniq_id . '.' . $file->extension;

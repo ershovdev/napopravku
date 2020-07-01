@@ -17,4 +17,12 @@ class File extends Model
     {
         return $this->belongsTo(Folder::class);
     }
+
+    public static function getRootFiles(Storage $storage)
+    {
+        return File::where([
+            ['folder_id', null],
+            ['storage_id', $storage->id],
+        ])->get();
+    }
 }

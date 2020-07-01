@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage as StorageFacade;
 
 class StorageService
 {
-
     /**
      * Creating the personal user's storage of files
      *
@@ -22,11 +21,5 @@ class StorageService
 
         StorageFacade::disk('local')->makeDirectory($directory_name);
         return $directory_name;
-    }
-
-
-    public static function getSubdirectories(string $storage_name)
-    {
-        return Storage::disk('local')->directories($storage_name);
     }
 }
