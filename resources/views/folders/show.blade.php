@@ -14,7 +14,7 @@
     <hr>
     <div class="file-explorer">
         @if(count($folders) === 0 && count($files) === 0)
-            <strong>Empty.</strong> Upload your first file!
+            <strong>Empty.</strong>
         @endif
 
         @foreach($files as $file)

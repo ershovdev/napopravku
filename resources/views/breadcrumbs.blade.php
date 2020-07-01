@@ -7,7 +7,7 @@
         @endif
 
         @if(!$loop->last)
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right mx-1"></i>
         @endif
     @endforeach
 </div>

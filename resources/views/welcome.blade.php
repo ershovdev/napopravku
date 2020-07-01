@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    Main page! Sign In or Sign Up for using cloud storage.
+    <h3>Welcome to your personal cloud storage!</h3>
+    <a href="{{ route('login') }}">Sign In</a>
+    or
+    <a href="{{ route('register') }}">Sign Up</a>
+    for using cloud storage.
 @endsection

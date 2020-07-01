@@ -1,17 +1,16 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Models\File;
 use App\Models\Folder;
 use App\Models\Storage;
-use App\Models\User;
 use App\Services\Helpers\FilesystemHelper;
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage as StorageFacade;
+use PhpOffice\PhpWord\IOFactory;
 
 class FileService
 {
@@ -33,7 +32,7 @@ class FileService
      *
      * @param Storage $storage
      * @param File $file
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getPrivateFileResponse(Storage $storage, File $file)
@@ -41,13 +40,18 @@ class FileService
         $path = self::getRealPath($storage, $file);
         if (!FileFacade::exists($path)) abort(404);
 
-        $file = FileFacade::get($path);
-        $type = FileFacade::mimeType($path);
+        return response()->file(self::getRealPath($storage, $file));
+    }
 
-        $response = response()->make($file, 200);
-        $response->header('Content-Type', $type);
+    public static function getPrivateWordResponse(Storage $storage, File $file)
+    {
+        $path = self::getRealPath($storage, $file);
+        if (!FileFacade::exists($path)) abort(404);
 
-        return $response;
+        $phpWord = IOFactory::load($path);
+        $objWriter = IOFactory::createWriter($phpWord, 'HTML');
+
+        return $objWriter;
     }
 
     /**

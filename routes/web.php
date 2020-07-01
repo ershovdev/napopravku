@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/my-drive/files/{file}', 'FileController@show')->name('files.show');
 
     Route::get('/host/file/{file}', 'FileController@hostFile')->name('files.host');
+    Route::get('/host/file/word/{file}', 'FileController@hostWordFile')->name('files.word.host');
 
     Route::post('/my-drive/folders', 'FolderController@store')->name('folders.store');
     Route::post('/my-drive/files', 'FileController@store')->name('files.store');

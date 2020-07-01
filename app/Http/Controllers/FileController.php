@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage as StorageFacade;
 use App\Services\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File as FileFacade;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
 {
@@ -22,12 +23,18 @@ class FileController extends Controller
      *
      * @param Request $request
      * @param File $file
-     * @return \Illuminate\Http\Response
+     * @return BinaryFileResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function hostFile(Request $request, File $file)
     {
         return FileService::getPrivateFileResponse($request->user()->storage, $file);
+    }
+
+    public function hostWordFile(Request $request, File $file)
+    {
+        $objWriter = FileService::getPrivateWordResponse($request->user()->storage, $file);
+        return view('files.word', compact('objWriter', 'file'));
     }
 
     /**

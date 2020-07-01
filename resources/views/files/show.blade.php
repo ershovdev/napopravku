@@ -17,8 +17,23 @@
         </button>
     </div>
     <div class="preview">
-        <iframe src="{{ route('files.host', $file) }}" frameborder="0"
-                class="w-100 m-0 p-0" scrolling="no" height="400px"></iframe>
+{{--        {{ route('files.host', $file) }}--}}
+        @if(in_array($file->extension, ['png', 'jpg', 'jpeg', 'gif']))
+            <img src="{{ route('files.host', $file) }}" width="400px">
+        @elseif($file->extension === 'pdf')
+            <a href="{{ route('files.host', $file) }}" class="btn btn-outline-primary" target="_blank">
+                Show document's content
+            </a>
+        @elseif(in_array($file->extension, ['doc', 'docx']))
+            <a href="{{ route('files.word.host', $file) }}" class="btn btn-outline-primary">
+                Show document's content
+            </a>
+        @else
+            <hr>
+                Sorry, we can't show content of that file in browser,
+                but you can always download it for detailed reading
+            <hr>
+        @endif
     </div>
 @endsection
 
@@ -49,4 +64,13 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        console.log(window.innerHeight);
+        window.onload = function () {
+            document.getElementById('viewer').style.height = window.innerHeight - 100 + 'px';
+        };
+    </script>
 @endsection
