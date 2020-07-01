@@ -23,7 +23,8 @@ class FolderService
         $breadcrumbs = new BreadcrumbsService();
 
         if (!$folder) {
-            $breadcrumbs->pushToStart(self::ROOT_NAME, null);
+            $link = $lastWithLink ? route('folders.root.show') : null;
+            $breadcrumbs->pushToStart(self::ROOT_NAME, $link);
             return $breadcrumbs->get();
         }
 
