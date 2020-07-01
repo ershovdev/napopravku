@@ -8,18 +8,34 @@ use App\Models\File;
 use App\Models\Storage;
 use App\Models\User;
 use App\Services\Helpers\FilesystemHelper;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage as StorageFacade;
 
 class FileService
 {
-    public static function getRealPath(Storage $storage, $file)
+    /**
+     * Get real path of the image in application
+     *
+     * @param Storage $storage
+     * @param File $file
+     * @return string
+     */
+    public static function getRealPath(Storage $storage, File $file)
     {
         $storageName = $storage->name;
         return storage_path('app/'.$storageName . '/' . $file->uniq_id . '.' . $file->extension);
     }
 
-    public static function getPrivateFileResponse(Storage $storage, $file)
+    /**
+     * Get response for private file hosting
+     *
+     * @param Storage $storage
+     * @param File $file
+     * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function getPrivateFileResponse(Storage $storage, File $file)
     {
         $path = self::getRealPath($storage, $file);
         if (!FileFacade::exists($path)) abort(404);
@@ -33,24 +49,49 @@ class FileService
         return $response;
     }
 
-    public static function store(Storage $storage, ?int $folder_id, $file)
+    public static function addFileToBreadcrumbs(array $breadcrumbs)
+    {
+
+    }
+
+    /**
+     * Add file to the root or to the folder (if folder_id provided)
+     *
+     * @param Storage $storage
+     * @param int|null $folder_id
+     * @param UploadedFile $file
+     * @return bool
+     */
+    public static function store(Storage $storage, ?int $folder_id, UploadedFile $uploadedFile)
     {
         $name = FilesystemHelper::generateRandomName();
-        $clientName = $file->getClientOriginalName();
-        $extension = $file->getClientOriginalExtension();
+        $clientName = $uploadedFile->getClientOriginalName();
+        $extension = $uploadedFile->getClientOriginalExtension();
 
-        File::create([
+        $file = File::create([
             'folder_id' => $folder_id,
             'storage_id' => $storage->id,
             'uniq_id' => $name,
             'name' => $clientName,
             'extension' => $extension,
-            'size' => $file->getSize(),
+            'size' => $uploadedFile->getSize(),
         ]);
 
-        return StorageFacade::disk('local')->putFileAs($storage->name, $file, $name . '.' . $extension);
+        if ($file) {
+            return StorageFacade::disk('local')
+                ->putFileAs($storage->name, $uploadedFile, $name . '.' . $extension);
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * Rename existing file in the cloud
+     *
+     * @param File $file
+     * @param string $newName
+     * @return bool
+     */
     public static function rename(File $file, string $newName)
     {
         if ($file->folder) {
@@ -70,14 +111,21 @@ class FileService
         return true;
     }
 
-    public static function delete(Storage $storage, $file)
+    /**
+     * Delete file from the cloud
+     *
+     * @param Storage $storage
+     * @param File $file
+     * @return bool
+     * @throws \Exception
+     */
+    public static function delete(Storage $storage, File $file)
     {
-        $filename = $file->name;
         $result = $file->delete();
 
         if ($result) {
-            return StorageFacade::disk('local')
-                ->delete($storage->name . '/' . $file->uniq_id . '.' . $file->extension);
+            $path = $storage->name . '/' . $file->uniq_id . '.' . $file->extension;
+            return StorageFacade::disk('local')->delete($path);
         } else {
             return false;
         }

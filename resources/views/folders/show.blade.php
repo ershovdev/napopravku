@@ -2,17 +2,7 @@
 
 @section('content')
 
-    @if(isset($parent->parent))
-        <a class="mr-2" href="{{ route('folders.show', $parent->parent) }}">Back</a>
-    @elseif(!isset($parent->parent) && Route::currentRouteName() !== 'folders.root.show')
-        <a class="mr-2" href="{{ route('folders.root.show') }}">Back</a>
-    @else
-        <div class="mr-2">&nbsp;</div> <!-- Just as stub for fixation of the interface -->
-    @endif
-
-    <div class="path mb-2">
-        Current path: {{ $path ?? '/' }}
-    </div>
+    @include('breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 
     <hr>
 

@@ -21,8 +21,9 @@ class FolderController extends Controller
     {
         $folders = Folder::getRootFolders($request->user()->storage);
         $files = File::getRootFiles($request->user()->storage);
+        $breadcrumbs = FolderService::breadcrumbs();
 
-        return view('folders.show', compact('folders', 'files'));
+        return view('folders.show', compact('folders', 'files', 'breadcrumbs'));
     }
 
     /**
@@ -38,9 +39,9 @@ class FolderController extends Controller
         $files = $folder->files;
 
         $parent = $folder;
-        $path = FolderService::getPath($parent);
+        $breadcrumbs = FolderService::breadcrumbs($parent);
 
-        return view('folders.show', compact('parent', 'folders', 'path', 'files'));
+        return view('folders.show', compact('parent', 'folders', 'breadcrumbs', 'files'));
     }
 
     /**
@@ -55,7 +56,7 @@ class FolderController extends Controller
         $name = $request->name;
         $parent_id = $request->parent;
 
-        FolderService::store($storage, $name, $parent_id);
+        FolderService::create($storage, $name, $parent_id);
 
         return redirect()->back();
     }

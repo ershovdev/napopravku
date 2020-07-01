@@ -2,13 +2,7 @@
 
 @section('content')
     <div class="back">
-        @if($file->folder)
-            <a href="{{ route('folders.show', $file->folder) }}">Back to folder</a>
-        @else
-            <a href="{{ route('folders.root.show') }}">Back to the root</a>
-        @endif
-        <br>
-        Current path: {{ $path }}
+        @include('breadcrumbs', ['breadcrumbs' => $breadcrumbs])
     </div>
     <hr>
     <div class="info mb-2">
