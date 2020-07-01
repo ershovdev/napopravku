@@ -5,5 +5,5 @@
     <a href="{{ route('login') }}">Sign In</a>
     or
     <a href="{{ route('register') }}">Sign Up</a>
-    for using cloud storage.
+    for using it.
 @endsection
