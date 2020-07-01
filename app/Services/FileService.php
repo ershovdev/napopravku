@@ -5,13 +5,13 @@ namespace App\Services;
 use App\Models\File;
 use App\Models\Folder;
 use App\Models\Storage;
-use App\Models\User;
 use App\Services\Helpers\FilesystemHelper;
-use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage as StorageFacade;
+use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Writer\WriterInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileService
@@ -34,7 +34,6 @@ class FileService
      * @param string|null $storageName
      * @param File $file
      * @return BinaryFileResponse
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getFileResponse(?string $storageName, File $file)
     {
@@ -50,10 +49,10 @@ class FileService
      * Translates word file into PHPWord object, so in future we could
      * translate it into HTML
      *
-     * @param Storage $storage
+     * @param string|null $storageName
      * @param File $file
-     * @return \PhpOffice\PhpWord\Writer\WriterInterface
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @return WriterInterface
+     * @throws Exception
      */
     public static function getWordResponse(?string $storageName, File $file)
     {
@@ -63,16 +62,16 @@ class FileService
         if (!FileFacade::exists($path)) abort(404);
 
         $phpWord = IOFactory::load($path);
-        $objWriter = IOFactory::createWriter($phpWord, 'HTML');
-
-        return $objWriter;
+        return IOFactory::createWriter($phpWord, 'HTML');
     }
 
     /**
      * Find all file neighbors in the root or in the folder (if folder provided)
      *
      * @param Folder|null $folder
-     * @return mixed
+     * @param string $name
+     * @param string|null $extension
+     * @return bool
      */
     public static function isDublicate(?Folder $folder, string $name, ?string $extension)
     {
@@ -96,7 +95,7 @@ class FileService
      *
      * @param Storage $storage
      * @param int|null $folder_id
-     * @param UploadedFile $file
+     * @param UploadedFile $uploadedFile
      * @return bool
      */
     public static function store(Storage $storage, ?int $folder_id, UploadedFile $uploadedFile)
@@ -170,10 +169,5 @@ class FileService
         } else {
             return false;
         }
-    }
-
-    public static function makePublic(Storage $storage, File $file)
-    {
-        $path = self::getRealPath($storage, $file);
     }
 }

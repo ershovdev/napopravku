@@ -12,9 +12,12 @@ use App\Models\File;
 use App\Services\BreadcrumbsService;
 use App\Services\FolderService;
 use App\Services\Helpers\FilesystemHelper;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage as StorageFacade;
 use App\Services\FileService;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Exception\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
@@ -22,10 +25,9 @@ class FileController extends Controller
     /**
      * Get response for the private file hosting
      *
-     * @param Request $request
+     * @param HostFileRequest $request
      * @param File $file
      * @return BinaryFileResponse
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function hostPrivateFile(HostFileRequest $request, File $file)
     {
@@ -38,8 +40,8 @@ class FileController extends Controller
      *
      * @param HostFileRequest $request
      * @param File $file
-     * @return \Illuminate\View\View
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @return View
+     * @throws Exception
      */
     public function hostPrivateWordFile(HostFileRequest $request, File $file)
     {
@@ -55,7 +57,6 @@ class FileController extends Controller
      * @param Request $request
      * @param string $publicUrl
      * @return BinaryFileResponse
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function hostPublicFile(Request $request, string $publicUrl)
     {
@@ -70,8 +71,8 @@ class FileController extends Controller
      *
      * @param Request $request
      * @param string $publicUrl
-     * @return \Illuminate\View\View
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @return View
+     * @throws Exception
      */
     public function hostPublicWordFile(Request $request, string $publicUrl)
     {
@@ -87,7 +88,7 @@ class FileController extends Controller
      *
      * @param ShowFileRequest $request
      * @param File $file
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function show(ShowFileRequest $request, File $file)
     {
@@ -105,7 +106,7 @@ class FileController extends Controller
      *
      * @param Request $request
      * @param string $publicUrl
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function showPublic(Request $request, string $publicUrl)
     {
@@ -148,7 +149,7 @@ class FileController extends Controller
      * Add file to the cloud
      *
      * @param StoreFileRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(StoreFileRequest $request)
     {
@@ -163,7 +164,7 @@ class FileController extends Controller
      *
      * @param Request $request
      * @param File $file
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function switchPublic(Request $request, File $file)
     {
@@ -187,7 +188,7 @@ class FileController extends Controller
      *
      * @param RenameFileRequest $request
      * @param File $file
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function rename(RenameFileRequest $request, File $file)
     {
@@ -201,7 +202,7 @@ class FileController extends Controller
      *
      * @param DeleteFileRequest $request
      * @param File $file
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws \Exception
      */
     public function delete(DeleteFileRequest $request, File $file)

@@ -7,7 +7,9 @@ use App\Http\Requests\StoreFolderRequest;
 use App\Models\File;
 use App\Models\Folder;
 use App\Services\FolderService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class FolderController extends Controller
 {
@@ -15,7 +17,7 @@ class FolderController extends Controller
      * Shows root folder of user's storage
      *
      * @param Request $request
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function root(Request $request)
     {
@@ -31,7 +33,7 @@ class FolderController extends Controller
      *
      * @param ShowFolderRequest $request
      * @param Folder $folder
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function show(ShowFolderRequest $request, Folder $folder)
     {
@@ -47,8 +49,8 @@ class FolderController extends Controller
     /**
      * Create new folder
      *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param StoreFolderRequest $request
+     * @return RedirectResponse
      */
     public function store(StoreFolderRequest $request)
     {
