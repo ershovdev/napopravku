@@ -5,19 +5,44 @@
         @include('breadcrumbs', ['breadcrumbs' => $breadcrumbs])
     </div>
     <hr>
-    <div class="info mb-2">
-        <strong>File:</strong> {{ $file->name }}
-        <br>
-        <strong>Size:</strong> {{ round($file->size / 1000) }}кб
-    </div>
-    <div class="actions mb-2">
-        <a class="btn btn-sm btn-primary" href="{{ route('files.download', $file) }}" target="_blank">Download</a>
-        <button class="btn btn-sm btn-primary" id="rename-button" data-toggle="modal" data-target="#renameFileModal">
+    @if($file->public_url)
+        <div class="alert-info p-3 d-flex justify-content-between align-items-center mb-2">
+            <p class="mb-0"><strong>Attention! </strong> Your file is visible now for everybody in the web</p>
+            <button onclick="document.getElementById('switch-public-form').submit()" class="btn btn-sm btn-primary">
+                Hide file
+            </button>
+        </div>
+    @endif
+    <div class="actions mb-2 p-3 bg-white d-flex align-items-center">
+        <div class="d-flex flex-column mr-4">
+            <p class="mb-0"><strong>File:</strong> {{ $file->name }}</p>
+            <p class="mb-0"><strong>Size:</strong> {{ round($file->size / 1000) }}kb</p>
+        </div>
+        <a class="btn btn-sm btn-primary mr-2" href="{{ route('files.download', $file) }}" target="_blank">Download</a>
+        <button class="btn btn-sm btn-primary mr-2" id="rename-button" data-toggle="modal" data-target="#renameFileModal">
             Rename
         </button>
+        @if(!$file->public_url)
+            <button class="btn btn-sm btn-primary"
+                    onclick="document.getElementById('switch-public-form').submit()">
+                Generate public URL
+            </button>
+        @endif
+        <form id="switch-public-form" action="{{ route('files.switchPublic', $file) }}"
+              method="POST" style="display: none;">
+            @csrf
+        </form>
+    </div>
+    <div class="info mb-2">
+        @if($file->public_url)
+            <strong>Public URL:</strong>
+            @php
+                $route = route('files.public.show', $file->public_url)
+            @endphp
+            <a href="{{ $route }}">{{ $route }}</a>
+        @endif
     </div>
     <div class="preview">
-{{--        {{ route('files.host', $file) }}--}}
         @if(in_array($file->extension, ['png', 'jpg', 'jpeg', 'gif']))
             <img src="{{ route('files.host', $file) }}" width="400px">
         @elseif($file->extension === 'pdf')
@@ -30,8 +55,8 @@
             </a>
         @else
             <hr>
-                Sorry, we can't show content of that file in browser,
-                but you can always download it for detailed reading
+            Sorry, we can't show content of that file in browser,
+            but you can always download it for detailed reading
             <hr>
         @endif
     </div>
@@ -45,7 +70,7 @@
                 @csrf
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Переименовать файл</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Rename file</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -53,13 +78,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <input type="text" class="form-control"
-                               name="name" placeholder="Введите новое имя"
+                               name="name" placeholder="Enter new filename"
                                value="{{ pathinfo($file->name, PATHINFO_FILENAME) }}">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="submit" class="btn btn-primary">Переименовать</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Rename</button>
                 </div>
             </form>
         </div>

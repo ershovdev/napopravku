@@ -5,42 +5,45 @@ namespace App\Services;
 use App\Models\File;
 use App\Models\Folder;
 use App\Models\Storage;
+use App\Models\User;
 use App\Services\Helpers\FilesystemHelper;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage as StorageFacade;
 use PhpOffice\PhpWord\IOFactory;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileService
 {
     /**
      * Get real path of the image in application
      *
-     * @param Storage $storage
+     * @param string $storageName
      * @param File $file
      * @return string
      */
-    public static function getRealPath(Storage $storage, File $file)
+    public static function getRealPath(string $storageName, File $file)
     {
-        $storageName = $storage->name;
         return storage_path('app/'.$storageName . '/' . $file->uniq_id . '.' . $file->extension);
     }
 
     /**
      * Get response for private file hosting
      *
-     * @param Storage $storage
+     * @param string|null $storageName
      * @param File $file
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public static function getPrivateFileResponse(Storage $storage, File $file)
+    public static function getFileResponse(?string $storageName, File $file)
     {
-        $path = self::getRealPath($storage, $file);
+        if (!$storageName) $storageName = $file->storage->name;
+
+        $path = self::getRealPath($storageName, $file);
         if (!FileFacade::exists($path)) abort(404);
 
-        return response()->file(self::getRealPath($storage, $file));
+        return response()->file($path);
     }
 
     /**
@@ -52,9 +55,11 @@ class FileService
      * @return \PhpOffice\PhpWord\Writer\WriterInterface
      * @throws \PhpOffice\PhpWord\Exception\Exception
      */
-    public static function getPrivateWordResponse(Storage $storage, File $file)
+    public static function getWordResponse(?string $storageName, File $file)
     {
-        $path = self::getRealPath($storage, $file);
+        if (!$storageName) $storageName = $file->storage->name;
+
+        $path = self::getRealPath($storageName, $file);
         if (!FileFacade::exists($path)) abort(404);
 
         $phpWord = IOFactory::load($path);
@@ -165,5 +170,10 @@ class FileService
         } else {
             return false;
         }
+    }
+
+    public static function makePublic(Storage $storage, File $file)
+    {
+        $path = self::getRealPath($storage, $file);
     }
 }

@@ -83,7 +83,7 @@
         <div class="container">
             @if(Session::has('success'))
                 <div class="alert alert-success">
-                    {{ Session::get('success') }}
+                    {!! Session::get('success') !!}
                 </div>
             @endif
 

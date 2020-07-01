@@ -13,6 +13,11 @@ class File extends Model
         return 'uniq_id';
     }
 
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class);
+    }
+
     public function folder()
     {
         return $this->belongsTo(Folder::class);
