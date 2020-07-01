@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Models\File;
+use App\Models\Folder;
 use App\Models\Storage;
 use App\Models\User;
 use App\Services\Helpers\FilesystemHelper;
@@ -49,9 +50,27 @@ class FileService
         return $response;
     }
 
-    public static function addFileToBreadcrumbs(array $breadcrumbs)
+    /**
+     * Find all file neighbors in the root or in the folder (if folder provided)
+     *
+     * @param Folder|null $folder
+     * @return mixed
+     */
+    public static function isDublicate(?Folder $folder, string $name, ?string $extension)
     {
+        $extension = $extension ? '.'.$extension : '';
 
+        if ($folder) {
+            $neighbors = $folder->files;
+        } else {
+            $neighbors = File::where('folder_id', null)->get();
+        }
+
+        foreach ($neighbors as $n) {
+            if ($n->name === $name . $extension) return true;
+        }
+
+        return false;
     }
 
     /**
@@ -67,6 +86,20 @@ class FileService
         $name = FilesystemHelper::generateRandomName();
         $clientName = $uploadedFile->getClientOriginalName();
         $extension = $uploadedFile->getClientOriginalExtension();
+
+        $folder = $folder_id ? Folder::find($folder_id) : null;
+        $result = self::isDublicate($folder, $clientName, null);
+
+        if ($result) {
+            $i = 2;
+            while ($result) {
+                $newName = FilesystemHelper::addNumberToFile($clientName, $i);
+                $result = self::isDublicate($folder, $newName, null);
+                if ($result) $i++;
+            }
+
+            $clientName = FilesystemHelper::addNumberToFile($clientName, $i);
+        }
 
         $file = File::create([
             'folder_id' => $folder_id,
@@ -94,16 +127,6 @@ class FileService
      */
     public static function rename(File $file, string $newName)
     {
-        if ($file->folder) {
-            $neighbors = $file->folder->files;
-        } else {
-            $neighbors = File::where('folder_id', null)->get();
-        }
-
-        foreach ($neighbors as $n) {
-            if ($n->name === $newName . '.' . $n->extension) return false;
-        }
-
         $file->update([
             'name' => $newName . '.' . $file->extension,
         ]);
