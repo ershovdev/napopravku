@@ -145,8 +145,24 @@ class FileService
      */
     public static function rename(File $file, string $newName)
     {
+        $folder = $file->folder ?? null;
+        $result = self::isDublicate($folder, $newName, $file->extension);
+
+        if ($result) {
+            $i = 2;
+            while ($result) {
+                $name = $newName . '.' . $file->extension;
+                $bufferName = FilesystemHelper::addNumberToFile($name, $i);
+                $result = self::isDublicate($folder, $bufferName, $file->extension);
+                if ($result) $i++;
+            }
+
+            $name = $newName . '.' . $file->extension;
+            $newName = FilesystemHelper::addNumberToFile($name, $i);
+        }
+
         $file->update([
-            'name' => $newName . '.' . $file->extension,
+            'name' => $newName,
         ]);
 
         return true;
