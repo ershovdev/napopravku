@@ -137,13 +137,12 @@
             window.Validate = function Validate() {
                 let file = fileObject.files[0];
 
-                if (file.size / 1024 / 1024 > 10) {
+                if (file.size / 1024 / 1024 >= 10) {
                     fileAlert.innerHTML = 'Sorry, file is too big for our server';
                     fileAlert.style.display = 'block';
                     return false;
                 }
 
-                console.log(file.type);
                 if (file.type.includes('zip') || file.type.includes('image') || file.type.includes('pdf') ||
                     file.type.includes('text') || file.type.includes('word') || file.type.includes('mp4')) {
                     let filename = fileObject.value;
@@ -161,8 +160,6 @@
                                 break;
                             }
                         }
-
-                        console.log(3);
 
                         if (!valid) {
                             fileAlert.innerHTML = 'Sorry, file is invalid';
