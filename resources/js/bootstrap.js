@@ -1,5 +1,4 @@
 window._ = require('lodash');
-window.Vue = require('vue');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -12,7 +11,6 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
-    require('dropzone/index');
 } catch (e) {}
 
 /**
