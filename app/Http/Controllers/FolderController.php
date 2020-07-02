@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteFolderRequest;
 use App\Http\Requests\ShowFolderRequest;
 use App\Http\Requests\StoreFolderRequest;
 use App\Models\File;
@@ -61,5 +62,11 @@ class FolderController extends Controller
         FolderService::create($storage, $name, $parent_id);
 
         return redirect()->back();
+    }
+
+    public function delete(DeleteFolderRequest $request, Folder $folder)
+    {
+        $result = FolderService::delete(request()->user()->storage, $folder);
+        return redirect()->back()->with($result ? 'success' : 'error', $result ? 'Deleted!' : 'Something went wrong');
     }
 }

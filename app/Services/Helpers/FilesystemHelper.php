@@ -28,4 +28,16 @@ class FilesystemHelper
             ' ('.$i.')' . '.' .
             pathinfo($filename, PATHINFO_EXTENSION);
     }
+
+    /**
+     * Add number to folder at the end in brackets
+     *
+     * @param string $filename
+     * @param int $i
+     * @return string
+     */
+    public static function addNumberToFolder(string $filename, int $i)
+    {
+        return $filename . "({$i})";
+    }
 }

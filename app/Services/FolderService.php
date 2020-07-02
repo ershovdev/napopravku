@@ -46,6 +46,31 @@ class FolderService
     }
 
     /**
+     * Find all folder neighbors in the root or in the folder (if folder provided)
+     *
+     * @param Folder|null $folder
+     * @param string $name
+     * @return bool
+     */
+    public static function isDublicate(?Folder $folder, string $name)
+    {
+        if ($folder) {
+            $neighbors = $folder->subFolders;
+        } else {
+            $neighbors = Folder::where([
+                ['parent_id', null],
+                ['storage_id', request()->user()->storage->id],
+            ])->get();
+        }
+
+        foreach ($neighbors as $n) {
+            if ($n->name === $name) return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Create new folder in root or in another folder (if parent_id provided)
      *
      * @param Storage $storage
@@ -58,6 +83,25 @@ class FolderService
     {
         $uniq_id = FilesystemHelper::generateRandomName();
 
+        $folder = null;
+        if ($parent_id) {
+            $folder = Folder::where('id', $parent_id)->first();
+        }
+
+        $result = self::isDublicate($folder, $name);
+
+        if ($result) {
+            $i = 2;
+            while ($result) {
+                $newName = FilesystemHelper::addNumberToFolder($name, $i);
+                $result = self::isDublicate($folder, $newName);
+                if ($result) $i++;
+            }
+
+            $name = FilesystemHelper::addNumberToFolder($name, $i);
+        }
+
+
         $folder = Folder::create([
             'storage_id' => $storage->id,
             'uniq_id' => $uniq_id,
@@ -67,6 +111,17 @@ class FolderService
 
         if ($folder) {
             return StorageFacade::disk('local')->makeDirectory($storage->name . '/' . $uniq_id);
+        } else {
+            return false;
+        }
+    }
+
+    public static function delete(Storage $storage, Folder $folder)
+    {
+        $result = $folder->delete();
+
+        if ($result) {
+            return StorageFacade::disk('local')->deleteDirectory($storage->name . '/' . $folder->uniq_id);
         } else {
             return false;
         }

@@ -29,6 +29,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/my-drive', 'FolderController@root')->name('folders.root.show');
 
     Route::get('/my-drive/folders/{folder}', 'FolderController@show')->name('folders.show');
+    Route::post('/my-drive/folders/{folder}/delete', 'FolderController@delete')->name('folders.delete');
+
     Route::get('/my-drive/files/{file}', 'FileController@show')->name('files.show');
 
     Route::get('/host/file/{file}', 'FileController@hostPrivateFile')->name('files.host');

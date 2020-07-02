@@ -23,7 +23,7 @@
                 <a href="{{ route('files.show', $file) }}">
                     {{ $file->name }}
                 </a>
-                <a href="#" class="text-danger ml-2">
+                <a class="text-danger ml-2">
                     <i class="fa fa-trash"
                        onclick="document.getElementById('delete_image_{{ $file->id }}').submit()"></i>
                 </a>
@@ -40,6 +40,16 @@
                 <a href="{{ route('folders.show', $folder) }}">
                     {{ $folder->name }}
                 </a>
+                @if(count($folder->files) === 0 && count($folder->subFolders) === 0)
+                    <a class="text-danger ml-2">
+                        <i class="fa fa-trash"
+                           onclick="document.getElementById('delete_folder_{{ $folder->id }}').submit()"></i>
+                    </a>
+                    <form id="delete_folder_{{ $folder->id }}" action="{{ route('folders.delete', $folder) }}"
+                          method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                @endif
             </div>
         @endforeach
     </div>
