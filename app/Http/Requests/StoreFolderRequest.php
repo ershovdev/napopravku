@@ -25,7 +25,7 @@ class StoreFolderRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|max:40',
             'parent' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
