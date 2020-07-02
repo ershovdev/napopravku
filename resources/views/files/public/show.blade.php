@@ -24,12 +24,12 @@
     <div class="preview">
         @if(in_array($file->extension, ['png', 'jpg', 'jpeg', 'gif']))
             <img src="{{ route('files.public.host', $file->public_url) }}" width="400px">
-        @elseif($file->extension === 'pdf')
+        @elseif(in_array($file->extension, ['pdf', 'txt']))
             <a href="{{ route('files.public.host', $file->public_url) }}" class="btn btn-outline-primary"
                target="_blank">
                 Show document's content
             </a>
-        @elseif(in_array($file->extension, ['doc', 'docx']))
+        @elseif($file->extension === 'docx')
             <a href="{{ route('files.public.word.host', $file->public_url) }}" class="btn btn-outline-primary">
                 Show document's content
             </a>

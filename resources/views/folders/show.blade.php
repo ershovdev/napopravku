@@ -67,6 +67,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div id="file-alert" class="alert alert-danger" style="display: none;"></div>
                     <form id="file-form" method="POST" action="{{ route('files.store') }}"
                           class="" enctype="multipart/form-data">
                         @csrf
@@ -76,7 +77,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button onclick="document.getElementById('file-form').submit();" class="btn btn-primary">
+                    <button onclick="return Validate();" class="btn btn-primary">
                         Upload
                     </button>
                 </div>
@@ -98,7 +99,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Type folder name here">
+                        <input type="text" class="form-control" name="name"
+                               placeholder="Type folder name here" required>
                         <input type="hidden" name="parent" value="{{ isset($parent) ? $parent->id : '' }}">
                     </div>
                 </div>
@@ -109,4 +111,59 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        window.onload = function () {
+            const validExtensions = ['png', 'gif', 'jpeg', 'jpg', 'txt', 'pdf', 'doc', 'docx', 'mp4', 'zip'];
+            let fileAlert = document.getElementById('file-alert');
+            let fileObject = document.getElementById('file');
+
+            window.Validate = function Validate() {
+                let file = fileObject.files[0];
+
+                if (file.size/1024/1024 > 10) {
+                    fileAlert.innerHTML = 'Sorry, file is too big for our server';
+                    fileAlert.style.display = 'block';
+                    return false;
+                }
+
+                console.log(file.type);
+                if (file.type.includes('zip') || file.type.includes('image') || file.type.includes('pdf') ||
+                    file.type.includes('text') || file.type.includes('word') || file.type.includes('mp4')) {
+                    let filename = fileObject.value;
+                    console.log(file.value);
+                    if (filename.length > 0) {
+                        let valid = false;
+                        console.log(filename);
+                        for (let i = 0; i < validExtensions.length; i++) {
+                            let currEx = validExtensions[i];
+                            console.log(filename.substr(filename.length - currEx.length, currEx.length).toLowerCase());
+                            if (filename.substr(filename.length - currEx.length, currEx.length).toLowerCase() ===
+                                currEx.toLowerCase()) {
+                                valid = true;
+                                document.getElementById('file-form').submit();
+                                break;
+                            }
+                        }
+
+                        console.log(3);
+
+                        if (!valid) {
+                            fileAlert.innerHTML = 'Sorry, file is invalid';
+                            fileAlert.style.display = 'block';
+                            return false;
+                        }
+                    }
+                } else {
+                    fileAlert.innerHTML = 'Sorry, you can\'t load that file on our server';
+                    fileAlert.style.display = 'block';
+                    return false;
+                }
+
+                return true;
+            }
+        }
+    </script>
 @endsection
