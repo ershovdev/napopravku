@@ -156,7 +156,7 @@ class FileController extends Controller
         $storage = $request->user()->storage;
         $result = FileService::store($storage, $request->folder, $request->file);
 
-        return redirect()->back()->with($result ? 'success' : 'error', $result ? 'Created!' : 'Something went wrong');
+        return redirect()->back()->with($result ? 'success' : 'error', $result ? 'Added!' : 'Something went wrong');
     }
 
     /**

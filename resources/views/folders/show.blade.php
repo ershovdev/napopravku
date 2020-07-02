@@ -70,7 +70,7 @@
                     <form id="file-form" method="POST" action="{{ route('files.store') }}"
                           class="" enctype="multipart/form-data">
                         @csrf
-                        <input type="file" name="file">
+                        <input type="file" name="file" id="file">
                         <input type="hidden" name="folder" value="{{ isset($parent) ? $parent->id : '' }}">
                     </form>
                 </div>

@@ -33,6 +33,8 @@
             <a href="{{ route('files.public.word.host', $file->public_url) }}" class="btn btn-outline-primary">
                 Show document's content
             </a>
+        @elseif($file->extension === 'mp4')
+            <video src="{{ route('files.public.host', $file->public_url) }}" controls="controls"></video>
         @else
             <hr>
             Sorry, we can't show content of that file in browser,

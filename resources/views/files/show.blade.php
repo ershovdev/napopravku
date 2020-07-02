@@ -19,7 +19,8 @@
             <p class="mb-0"><strong>Size:</strong> {{ round($file->size / 1000) }}kb</p>
         </div>
         <a class="btn btn-sm btn-primary mr-2" href="{{ route('files.download', $file) }}" target="_blank">Download</a>
-        <button class="btn btn-sm btn-primary mr-2" id="rename-button" data-toggle="modal" data-target="#renameFileModal">
+        <button class="btn btn-sm btn-primary mr-2" id="rename-button" data-toggle="modal"
+                data-target="#renameFileModal">
             Rename
         </button>
         @if(!$file->public_url)
@@ -53,6 +54,8 @@
             <a href="{{ route('files.word.host', $file) }}" class="btn btn-outline-primary">
                 Show document's content
             </a>
+        @elseif($file->extension === 'mp4')
+            <video src="{{ route('files.host', $file) }}" controls="controls"></video>
         @else
             <hr>
             Sorry, we can't show content of that file in browser,
