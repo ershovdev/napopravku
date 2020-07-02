@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="alert-info p-3 mb-2 d-flex justify-content-between align-items-center">
+    <div class="alert-info p-3 mb-2 d-flex justify-content-between align-items-center flex-wrap">
         @if(request()->user() && request()->user()->storage->id == $file->storage_id)
             It's how any users will see public page of your file
             <a href="{{ route('files.show', $file) }}" class="btn btn-primary">Go back to owner view</a>
@@ -10,7 +10,7 @@
         @endif
     </div>
 
-    <div class="actions mb-2 p-3 bg-white d-flex align-items-center">
+    <div class="actions mb-2 p-3 bg-white d-flex align-items-center flex-wrap">
         <div class="d-flex flex-column mr-4">
             <p class="mb-0"><strong>File:</strong> {{ $file->name }}</p>
             <p class="mb-0"><strong>Size:</strong> {{ round($file->size / 1000) }}kb</p>
@@ -23,7 +23,7 @@
 
     <div class="preview">
         @if(in_array($file->extension, ['png', 'jpg', 'jpeg', 'gif']))
-            <img src="{{ route('files.public.host', $file->public_url) }}" width="400px">
+            <img src="{{ route('files.public.host', $file->public_url) }}" class="preview-image">
         @elseif(in_array($file->extension, ['pdf', 'txt']))
             <a href="{{ route('files.public.host', $file->public_url) }}" class="btn btn-outline-primary"
                target="_blank">

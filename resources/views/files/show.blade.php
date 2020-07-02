@@ -6,33 +6,36 @@
     </div>
     <hr>
     @if($file->public_url)
-        <div class="alert-info p-3 d-flex justify-content-between align-items-center mb-2">
+        <div class="alert-info p-3 d-flex justify-content-between align-items-center mb-2 flex-wrap">
             <p class="mb-0"><strong>Attention! </strong> Your file is visible now for everybody in the web</p>
             <button onclick="document.getElementById('switch-public-form').submit()" class="btn btn-sm btn-primary">
                 Hide file
             </button>
         </div>
     @endif
-    <div class="actions mb-2 p-3 bg-white d-flex align-items-center">
-        <div class="d-flex flex-column mr-4">
+    <div class="actions mb-2 p-3 bg-white d-flex align-items-center flex-wrap">
+        <div class="d-flex flex-column mr-4 mb-sm-2">
             <p class="mb-0"><strong>File:</strong> {{ $file->name }}</p>
             <p class="mb-0"><strong>Size:</strong> {{ round($file->size / 1000) }}kb</p>
         </div>
-        <a class="btn btn-sm btn-primary mr-2" href="{{ route('files.download', $file) }}" target="_blank">Download</a>
-        <button class="btn btn-sm btn-primary mr-2" id="rename-button" data-toggle="modal"
-                data-target="#renameFileModal">
-            Rename
-        </button>
-        @if(!$file->public_url)
-            <button class="btn btn-sm btn-primary"
-                    onclick="document.getElementById('switch-public-form').submit()">
-                Generate public URL
+        <div class="d-flex flex-wrap file-buttons">
+            <a class="btn btn-sm btn-primary mr-2 flex-grow-1" href="{{ route('files.download', $file) }}"
+               target="_blank">Download</a>
+            <button class="btn btn-sm btn-primary mr-2 flex-grow-1" id="rename-button" data-toggle="modal"
+                    data-target="#renameFileModal">
+                Rename
             </button>
-        @endif
-        <form id="switch-public-form" action="{{ route('files.switchPublic', $file) }}"
-              method="POST" style="display: none;">
-            @csrf
-        </form>
+            @if(!$file->public_url)
+                <button class="btn btn-sm btn-primary flex-grow-1"
+                        onclick="document.getElementById('switch-public-form').submit()">
+                    Generate public URL
+                </button>
+            @endif
+            <form id="switch-public-form" action="{{ route('files.switchPublic', $file) }}"
+                  method="POST" style="display: none;">
+                @csrf
+            </form>
+        </div>
     </div>
     <div class="info mb-2">
         @if($file->public_url)
@@ -45,7 +48,7 @@
     </div>
     <div class="preview">
         @if(in_array($file->extension, ['png', 'jpg', 'jpeg', 'gif']))
-            <img src="{{ route('files.host', $file) }}" width="400px">
+            <img src="{{ route('files.host', $file) }}" class="preview-image">
         @elseif(in_array($file->extension, ['pdf', 'txt']))
             <a href="{{ route('files.host', $file) }}" class="btn btn-outline-primary" target="_blank">
                 Show document's content

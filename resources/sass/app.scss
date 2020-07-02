@@ -23,3 +23,25 @@
         height: auto !important;
     }
 }
+
+.preview-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}
+
+.file-buttons {
+    max-width: 400px;
+}
+
+@media all and (max-width: 352px)  {
+    .file-buttons {
+        a, button {
+            margin-bottom: 5px;
+        }
+
+        #rename-button {
+            margin-right: 0 !important;
+        }
+    }
+}
