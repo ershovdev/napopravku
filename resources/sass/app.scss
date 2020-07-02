@@ -11,8 +11,15 @@
 @import "~dropzone/dist/dropzone.css";
 
 
-
 .block {
     background-color: white;
     border-radius: 5px;
+}
+
+.word {
+    position: relative;
+    img {
+        width: 100% !important;
+        height: auto !important;
+    }
 }
