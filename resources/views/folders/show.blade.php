@@ -1,18 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('breadcrumbs', ['breadcrumbs' => $breadcrumbs])
-    <hr>
-    <div class="actions mb-2">
+    <div class="actions mb-4">
         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createFileModal">
-            Upload file
+            Upload file here
         </button>
         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createFolderModal">
-            Create folder
+            Create folder here
         </button>
     </div>
-    <hr>
+    <hr class="mb-1">
+    @include('breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+    <hr class="mt-1">
     <div class="file-explorer">
+        @if(Route::currentRouteName() === 'folders.show')
+            <div class="mb-2">
+                @if(isset($parent) && $parent->parent)
+                    <a href="{{ route('folders.show', $parent->parent) }}">
+                        <strong><i class="fa fa-angle-left mr-1"></i> Go back</strong>
+                    </a>
+                @else
+                    <a href="{{ route('folders.root.show') }}">
+                        <strong><i class="fa fa-angle-left mr-1"></i> Go back</strong>
+                    </a>
+                @endif
+            </div>
+        @endif
+
         @if(count($folders) === 0 && count($files) === 0)
             <strong>Empty.</strong>
         @endif
@@ -123,7 +137,7 @@
             window.Validate = function Validate() {
                 let file = fileObject.files[0];
 
-                if (file.size/1024/1024 > 10) {
+                if (file.size / 1024 / 1024 > 10) {
                     fileAlert.innerHTML = 'Sorry, file is too big for our server';
                     fileAlert.style.display = 'block';
                     return false;

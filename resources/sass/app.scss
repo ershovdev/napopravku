@@ -34,6 +34,27 @@
     max-width: 400px;
 }
 
+.fa {
+    color: #939393;
+}
+
+.fa-trash {
+    color: red;
+    cursor: pointer;
+}
+
+.directory, .file {
+    background-color: white;
+    padding: 4px 10px;
+    border-radius: 5px;
+
+    a {
+        color: grey;
+        height: 100%;
+        width: 100%;
+    }
+}
+
 @media all and (max-width: 352px)  {
     .file-buttons {
         a, button {
