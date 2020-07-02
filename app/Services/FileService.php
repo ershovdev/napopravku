@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage as StorageFacade;
 use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Reader\RTF\Document;
 use PhpOffice\PhpWord\Writer\WriterInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 

@@ -116,7 +116,7 @@
 @section('scripts')
     <script>
         window.onload = function () {
-            const validExtensions = ['png', 'gif', 'jpeg', 'jpg', 'txt', 'pdf', 'doc', 'docx', 'mp4', 'zip'];
+            const validExtensions = ['png', 'gif', 'jpeg', 'jpg', 'txt', 'pdf', 'doc', 'docx', 'mp4', 'zip', 'rtf'];
             let fileAlert = document.getElementById('file-alert');
             let fileObject = document.getElementById('file');
 
